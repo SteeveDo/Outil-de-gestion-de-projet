@@ -45,7 +45,12 @@ jobs:
         if: always()
 
       - name: Build project
-        run: npm run start
+        run: |
+          npm run start
+      
+          sleep 5
+          
+          sudo kill -9 $(sudo lsof -t -i:3001)
         working-directory: node-server
         if: steps.test.outcome == 'success'
 
