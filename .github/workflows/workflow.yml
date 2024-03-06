@@ -42,6 +42,7 @@ jobs:
 
       - name: Build project
         run: npm run build
+        working-directory: node-server
         if: steps.test.outcome == 'success'
 
       - name: Deploy to production

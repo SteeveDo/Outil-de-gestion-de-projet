@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "jest --testPathPattern=test.js",
-    "build": "babel node-server -d dist",
+    "build": "babel . -d dist",
     "start": "node dist/server.js"
   },
   "keywords": [],
