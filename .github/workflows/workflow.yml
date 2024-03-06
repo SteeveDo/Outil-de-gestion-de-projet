@@ -22,10 +22,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '14'
-      
-      - name: List directory contents
-        run: ls -l
-        working-directory: node-server
     
       - name: Clear npm cache
         run: npm cache clean --force
@@ -39,6 +35,14 @@ jobs:
         id: test
         run: npm test
         working-directory: node-server
+
+      - name: Stop the server
+        run: |
+          pid=$(lsof -ti :3001)
+          if [ -n "$pid" ]; then
+            kill $pid
+          fi
+        if: always()
 
       - name: Build project
         run: npm run start
