@@ -27,9 +27,12 @@ jobs:
         run: ls -l
         working-directory: node-server
     
-
+      - name: Clear npm cache
+        run: npm cache clean --force
+        working-directory: node-server
+      
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         working-directory: node-server
 
       - name: Run tests
