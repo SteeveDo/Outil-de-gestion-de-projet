@@ -119,6 +119,57 @@ app.post('/createuser/',
 
 )
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+app.post('/deleteuser/', 
+  body('email').isString().notEmpty(),
+  async (req, res) => {
+    try{
+      const user_info = req.body;
+
+      async function get_number_rows_by_email(email, database, users_table){
+        let query_1 = `SELECT * FROM ${database}.${users_table} WHERE (email= @mail )`;
+
+        let options_1 = {
+          query: query_1,
+          params: { mail: email
+                },
+          // Location must match that of the dataset(s) referenced in the query. EU in our case
+          location: 'EU',
+        };
+        const [rows] = await bigquery.query(options_1);
+        const result = rows.length
+        return result
+      }
+
+      const n_rows_before = await get_number_rows_by_email(user_info.email, database, users_table)
+
+      let query = `DELETE FROM ${database}.${users_table} WHERE (email = @mail)`;
+      let options = {
+          query: query,
+          params:{
+              mail: user_info.email,
+          },
+          location: 'EU',
+      }
+      const [job] = await bigquery.query(options)
+
+      const n_rows_deleted = n_rows_before - await get_number_rows_by_email(user_info.email, database, users_table)
+
+      res.status(200).json({ success: true, numRowsDeleted: n_rows_deleted });
+
+    }
+    catch(error){
+      console.error('Error running query:', error);
+      res.status(500).json({ error: 'An error occurred while querying data.' });
+    }
+
+  }
+
+)
+
+if (require.main === module) {
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+}
+
+module.exports = app; // Export the Express app instance

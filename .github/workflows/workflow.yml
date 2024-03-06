@@ -1,0 +1,40 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - development
+      - preproduction
+      - production
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON}}
+      PLATFORM_DATABASE: ${{secrets.PLATFORM_DATABASE}}
+      USERS_TABLE: ${{secrets.USERS_TABLE}}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        id: test
+        run: npm test
+
+      - name: Build project
+        run: npm run build
+        if: steps.test.outcome == 'success'
+
+      - name: Deploy to production
+        if: (github.ref == 'refs/heads/production') && (steps.test.outcome == 'success')
+        run: |
+          echo "production"
