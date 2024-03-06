@@ -41,7 +41,7 @@ jobs:
         working-directory: node-server
 
       - name: Build project
-        run: npm run build
+        run: npm run start
         working-directory: node-server
         if: steps.test.outcome == 'success'
 
