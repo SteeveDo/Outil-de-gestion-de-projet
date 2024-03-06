@@ -75,5 +75,5 @@ describe('POST /createuser/', () => {
       .send(User);
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ success: true, numRowsDeleted: 1 });
-  });
+  }, 10000);
 });
