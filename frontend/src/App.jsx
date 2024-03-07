@@ -1,18 +1,13 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import SignIn from "./components/SignIn";
+// import Team from '../public/team.jpg'
 
-import SignIn from './components/SignIn'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
+    <div className="App">
       <SignIn />
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default App
+export default App;
