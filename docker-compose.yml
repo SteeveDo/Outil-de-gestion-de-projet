@@ -4,7 +4,6 @@ services:
   node-server:
     image: heunasteeve/backend-image:latest
     build:
-      context: ./node-server
       dockerfile: Dockerfile-node-server
     ports:
       - "3001:3001"
@@ -12,7 +11,6 @@ services:
   react-frontend:
     image: heunasteeve/frontend-image:latest
     build:
-      context: ./frontend
       dockerfile: Dockerfile-react-frontend
     ports:
       - "3000:3000"
