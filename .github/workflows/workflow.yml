@@ -56,7 +56,8 @@ jobs:
         if: (steps.test-back.outcome == 'success') 
 
       - name: Start front-end project
-        run: npm run start
+        run: |
+          echo front-end
         working-directory: frontend
         if: (steps.test-front.outcome == 'success')      
 
