@@ -2,6 +2,7 @@ version: '3'
 
 services:
   node-server:
+    image: heunasteeve/backend-image:latest
     build:
       context: ./node-server
       dockerfile: Dockerfile-node-server
@@ -9,6 +10,7 @@ services:
       - "3001:3001"
 
   react-frontend:
+    image: heunasteeve/frontend-image:latest
     build:
       context: ./front-end
       dockerfile: Dockerfile-react-frontend
