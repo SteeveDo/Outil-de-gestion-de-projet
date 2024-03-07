@@ -23,30 +23,55 @@ jobs:
         with:
           node-version: '14'
     
-      - name: Clear npm cache
+      - name: Clear npm cache for back-end
         run: npm cache clean --force
         working-directory: node-server
       
-      - name: Install dependencies
+      - name: Install back-end dependencies
         run: npm install
         working-directory: node-server
 
-      - name: Run tests
-        id: test
+      - name: Run tests for back-ennd
+        id: test-back
         run: npm test
         working-directory: node-server
 
-      - name: Build project
-        run: |
-          npm run start
+      - name: Clear npm cache for front-end
+        run: npm cache clean --force
+        working-directory: frontend
       
-          sleep 5
+      - name: Install front-end dependencies
+        run: npm install
+        working-directory: frontend
 
-          sudo kill -9 $(sudo lsof -t -i:3001)
+      - name: Run tests for front-ennd
+        id: test-front
+        run: npm test
+        working-directory: frontend
+
+      - name: Start back-end project
+        run: |
+          echo back-end
         working-directory: node-server
-        if: steps.test.outcome == 'success'
+        if: (steps.test-back.outcome == 'success') 
+
+      - name: Start front-end project
+        run: npm run start
+        working-directory: frontend
+        if: (steps.test-front.outcome == 'success')      
 
       - name: Deploy to production
-        if: (github.ref == 'refs/heads/production') && (steps.test.outcome == 'success')
+        if: (github.ref == 'refs/heads/development') && (steps.test-back.outcome == 'success') && (steps.test-front.outcome == 'success')
         run: |
           echo "production"
+
+      - name: Build and push Docker image
+        if: success() && github.ref == 'refs/heads/development'
+        run: |
+          docker build -t organize-better .
+          docker 0.1 organize-better heunasteeve/Outil-de-gestion-de-projet:latest
+          echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login -u heunasteeve --password-stdin
+          docker push heunasteeve/Outil-de-gestion-de-projet:latest
+        env:
+          DOCKER_HUB_TOKEN: ${{ secrets.DOCKER_HUB_TOKEN }}
+        

@@ -1,0 +1,29 @@
+# Use a base image with Node.js for building the React app
+FROM node:14 as builder
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application
+COPY . .
+
+# Build the React app
+RUN npm run build
+
+# Use a base image that's optimized for serving static files
+FROM nginx:alpine
+
+# Copy the build output from the previous stage to the nginx server's html directory
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Expose port 3000
+EXPOSE 3000
+
+# The default command starts nginx to serve the static files
+CMD ["nginx", "-g", "daemon off;"]

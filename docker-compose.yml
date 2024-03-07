@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  node-server:
+    build:
+      context: ./node-server
+      dockerfile: Dockerfile-node-server
+    ports:
+      - "3001:3001"
+
+  react-frontend:
+    build:
+      context: ./front-end
+      dockerfile: Dockerfile-react-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - node-server
