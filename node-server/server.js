@@ -1,6 +1,7 @@
 // server.js 
 // express is used to create the API
 const express = require('express');
+const cors = require('cors');
 
 const { body, validationResult } = require('express-validator');
 
@@ -24,6 +25,7 @@ const bigquery = new BigQuery({
   });
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/getuser/:email/:pwd', async (req, res) => {
   try {
