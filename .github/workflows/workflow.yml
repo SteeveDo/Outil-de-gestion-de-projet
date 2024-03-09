@@ -79,12 +79,16 @@ jobs:
         run: |
           echo "production"
 
-      - name: Deploy to GKE
+      - name: Authenticate to GCP
         if: success() && github.ref == 'refs/heads/feature/task-6'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.KUBERNETES_SA_KEY }}'
+
+      - name : Deploy to GKE
         uses: google-github-actions/setup-gcloud@v1
         with:
           version: 'latest'
-          service_account_key: ${{ secrets.KUBERNETES_SA_KEY }}
 
       - name: Deploy Backend
         run: |
