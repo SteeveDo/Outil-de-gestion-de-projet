@@ -81,7 +81,7 @@ jobs:
 
       - name: Deploy to GKE
         if: success() && github.ref == 'refs/heads/feature/task-6'
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@main
+        uses: GoogleCloudPlatform/google-github-actions/setup-gcloud@main
         with:
           version: 'latest'
           service_account_key: ${{ secrets.KUBERNETES_SA_KEY }}
