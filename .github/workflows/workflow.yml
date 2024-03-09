@@ -89,7 +89,18 @@ jobs:
         uses: google-github-actions/setup-gcloud@v1
         with:
           version: 'latest'
-
+      - name: Debug
+        run: |
+          echo "Debugging..."
+          echo "KUBERNETES_SA_KEY: ${{ secrets.KUBERNETES_SA_KEY }}"
+          gcloud version
+          gcloud auth activate-service-account --key-file=<(echo "$KUBERNETES_SA_KEY")
+          gcloud container clusters list  # Check if clusters are accessible
+          gcloud container clusters get-credentials dev-cluster --zone europe-central2 --project project-manager-416113
+          kubectl version
+          kubectl get pods
+          kubectl describe pods
+        
       - name: Deploy Backend
         run: |
           gcloud container clusters get-credentials dev-cluster --zone europe-central2 --project project-manager-416113
