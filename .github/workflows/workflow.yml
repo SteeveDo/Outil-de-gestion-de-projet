@@ -85,6 +85,16 @@ jobs:
         with:
           credentials_json: '${{ secrets.KUBERNETES_SA_KEY }}'
 
+      - name: Install gke-gcloud-auth-plugin
+        run: |
+          # Download the gke-gcloud-auth-plugin binary
+          wget https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/releases/download/gke-gcloud-auth-plugin/gke-gcloud-auth-plugin-linux-amd64.tar.gz
+          tar -xvf gke-gcloud-auth-plugin-linux-amd64.tar.gz
+          # Move the binary to a directory in your PATH
+          sudo mv gke-gcloud-auth-plugin /usr/local/bin/
+          # Ensure executable permissions
+          sudo chmod +x /usr/local/bin/gke-gcloud-auth-plugin
+        
       - name : Deploy to GKE
         uses: google-github-actions/setup-gcloud@v1
         with:
