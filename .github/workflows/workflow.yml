@@ -87,7 +87,8 @@ jobs:
 
       - name: Install gke-gcloud-auth-plugin
         run: |
-          grep -rhE ^deb /etc/apt/sources.list* | grep "cloud-sdk"
+          grep -rhE ^deb /etc/apt/sources.list*
+          grep "cloud-sdk"
           apt-get update
           apt-get install -y kubectl
           kubectl version --client
